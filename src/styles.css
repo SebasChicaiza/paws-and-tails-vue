@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+/* ===== PALETA PERSONALIZADA PAWS AND TAILS ===== */
+@layer base {
+  html {
+    font-family: 'Roboto', sans-serif;
+  }
+}
+
+@layer utilities {
+  :root {
+    --color-primary-dark: #001a37;
+    --color-primary: #0b2c58;
+    --color-primary-light: #0a5688;
+    --color-accent-blue: #056ea8;
+    --color-accent-orange: #ff8360;
+    --color-text-base: #2d2d2d;
+    --color-text-muted: #6b6b6b;
+    --color-surface: #ffffff;
+    --color-overlay: rgba(11, 44, 88, 0.55);
+    --color-background: #eaf2f8;
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  .bg-primary-dark {
+    background-color: var(--color-primary-dark);
+  }
+  .bg-primary-light {
+    background-color: var(--color-primary-light);
+  }
+  .bg-accent-blue {
+    background-color: var(--color-accent-blue);
+  }
+  .bg-accent-orange {
+    background-color: var(--color-accent-orange);
+  }
+  .bg-surface {
+    background-color: var(--color-surface);
+  }
+  .bg-background {
+    background-color: var(--color-background);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+  .text-base {
+    color: var(--color-text-base);
+  }
+
+  .hover\\:bg-accent-orange:hover {
+    background-color: #e66d4d;
+  }
+}
