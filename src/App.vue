@@ -1,23 +1,20 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AppNavbar from '@/components/AppNavbar.vue'
+import AppFooter from '@/components/AppFooter.vue'
+</script>
 
 <template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/images/logoPawsTails-noFondo.png"
-      width="125"
-      height="125"
-    />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav></nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div id="app" class="flex flex-col min-h-screen">
+    <AppNavbar />
+    <main class="flex-grow">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
+    <AppFooter />
+  </div>
 </template>
 
 <style scoped></style>
