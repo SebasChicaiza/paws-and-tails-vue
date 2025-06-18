@@ -24,12 +24,12 @@ const {
 const route = useRoute()
 
 // Manejadores de eventos para ProductCard
-const handleAddToCart = (productId: number) => {
+const handleAddToCart = (productId: number, quantityToAddToCart: number) => {
   const product = products.value.find((p) => p.idProducto === productId)
   if (product) {
-    // Aquí puedes abrir un modal para pedir la cantidad, o usar un valor por defecto
-    const quantity = 1 // Por ahora, cantidad por defecto 1
-    addToCart(product, quantity)
+    // *** USA LA CANTIDAD RECIBIDA DEL ProductCard ***
+    // const quantity = 1 // ELIMINA O COMENTA ESTA LÍNEA
+    addToCart(product, quantityToAddToCart) // Pasa la cantidad recibida
   }
 }
 
@@ -134,8 +134,7 @@ watch(selectedCategory, () => {
             price: product.prodPrecio,
             oldPrice: product.prodPrecioAnterior,
             description: product.prodDescripcion,
-
-            isNew: product.esNuevo, // Asume que la API tiene un campo 'esNuevo'
+            stock: product.prodStock,
           }"
           @add-to-cart="handleAddToCart"
           @view-details="handleViewDetails"

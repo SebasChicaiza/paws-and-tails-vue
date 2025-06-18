@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue' // Importar 'ref'
-import { RouterLink } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
 
 // Define la interfaz para las propiedades del producto
@@ -58,46 +57,39 @@ const handleAddToCart = () => {
   emit('addToCart', props.product.id, quantity.value)
   quantity.value = 1 // Resetear la cantidad a 1 después de añadir al carrito
 }
-
-const handleViewDetails = () => {
-  emit('viewDetails', props.product.id)
-}
 </script>
 
 <template>
   <div
     class="bg-surface rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
   >
-    <RouterLink :to="`/productos/${product.id}`" class="block flex-shrink-0 relative">
-      <img
-        :src="product.image"
-        :alt="product.name"
-        class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-      />
-      <div class="absolute top-2 right-2 flex flex-col space-y-1">
-        <span
-          v-if="product.isNew"
-          class="bg-accent text-white text-xs font-bold px-2 py-1 rounded-full shadow-md"
-        >
-          ¡Nuevo!
-        </span>
-        <span
-          v-if="product.hasDiscount && discountPercentage"
-          class="bg-error text-white text-xs font-bold px-2 py-1 rounded-full shadow-md"
-        >
-          {{ discountPercentage }}
-        </span>
-      </div>
-    </RouterLink>
+    <img
+      :src="product.image"
+      :alt="product.name"
+      class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
+    />
+    <div class="absolute top-2 right-2 flex flex-col space-y-1">
+      <span
+        v-if="product.isNew"
+        class="bg-accent text-white text-xs font-bold px-2 py-1 rounded-full shadow-md"
+      >
+        ¡Nuevo!
+      </span>
+      <span
+        v-if="product.hasDiscount && discountPercentage"
+        class="bg-error text-white text-xs font-bold px-2 py-1 rounded-full shadow-md"
+      >
+        {{ discountPercentage }}
+      </span>
+    </div>
 
     <div class="p-5 flex-grow flex flex-col">
-      <RouterLink :to="`/productos/${product.id}`" class="block">
-        <h3
-          class="text-xl font-bold text-text-dark hover:text-primary transition-colors duration-200 mb-2 leading-tight"
-        >
-          {{ product.name }}
-        </h3>
-      </RouterLink>
+      <h3
+        class="text-xl font-bold text-text-dark hover:text-primary transition-colors duration-200 mb-2 leading-tight"
+      >
+        {{ product.name }}
+      </h3>
+
       <p class="text-text-muted text-sm mb-4 line-clamp-3">
         {{ product.description }}
       </p>
@@ -142,9 +134,6 @@ const handleViewDetails = () => {
             :disabled="product.stock === 0 || quantity <= 0"
           >
             {{ product.stock === 0 ? 'Agotado' : 'Añadir al Carrito' }}
-          </BaseButton>
-          <BaseButton variant="outline" size="md" class="flex-grow" @click="handleViewDetails">
-            Ver Detalles
           </BaseButton>
         </div>
       </div>
