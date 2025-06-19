@@ -23,8 +23,7 @@ const loadAccountData = async () => {
   // 1. Cargar datos del usuario de localStorage
   const storedAccount = localStorage.getItem('cuenta')
   if (!storedAccount) {
-    alert('Debes iniciar sesión para acceder a esta sección.')
-    router.push({ name: 'Login' }) // Redirigir al login si no hay sesión
+    error.value = 'No se encontró información de usuario.'
     isLoading.value = false
     return
   }

@@ -37,10 +37,6 @@ const validateForm = () => {
   if (!password.value) {
     passwordError.value = 'La contraseña es obligatoria.'
     isValid = false
-  } else if (password.value.length < 6) {
-    // Puedes ajustar esta longitud mínima
-    passwordError.value = 'La contraseña debe tener al menos 6 caracteres.'
-    isValid = false
   }
 
   return isValid

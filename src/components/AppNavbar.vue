@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { RouterLink } from 'vue-router' // Asume que tienes Vue Router instalado
-
-// Importa tu componente BaseButton si lo vas a usar, lo recomiendo para el botón de logout
-import BaseButton from '../components/base/BaseButton.vue' // Asegúrate de que la ruta sea correcta
+import { computed, ref, onMounted } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user' // Ajusta la ruta si es necesario
+import BaseButton from '../components/base/BaseButton.vue'
 
 const isMenuOpen = ref(false)
-const isAuthenticated = ref(false) // Simula el estado de autenticación
-const userName = ref('') // Para el mensaje de bienvenida
+const router = useRouter()
+const userStore = useUserStore()
 
-// Lógica para alternar el menú en móviles
+onMounted(() => {
+  userStore.loadFromLocalStorage()
+})
+
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
 }
 
-// Enlaces de navegación
 const navLinks = [
   { name: 'Inicio', path: '/' },
   { name: 'Sobre Nosotros', path: '/nosotros' },
@@ -23,30 +24,17 @@ const navLinks = [
   { name: 'Mi Cuenta', path: '/micuenta' },
 ]
 
-// Lógica de usuario y admin (similar a tu JS original)
+// Ejemplo: si el usuario es admin (ajusta según tu lógica real)
 const showAdminButton = computed(() => {
-  // Aquí iría tu lógica real para determinar si el usuario es admin.
-  // Por ahora, lo simulamos.
-  const user = localStorage.getItem('usuario') // O mejor, desde un store de Pinia/Vuex
-  return user === 'admin' // Ejemplo: si el usuario es 'admin'
+  // Si guardas el rol en el store, usa userStore.userRole === 'admin'
+  // Aquí solo es un ejemplo usando el nombre
+  return userStore.userName === 'admin'
 })
 
 const handleLogout = () => {
-  // Lógica para cerrar sesión
-  localStorage.removeItem('usuario') // O tu lógica de desautenticación real
-  isAuthenticated.value = false
-  userName.value = ''
-  // router.push('/') // O redirigir a la página de inicio de sesión
-  console.log('Sesión cerrada')
+  userStore.logout()
+  router.push('/login')
 }
-
-onMounted(() => {
-  const user = localStorage.getItem('usuario')
-  if (user) {
-    isAuthenticated.value = true
-    userName.value = user // Asumiendo que el 'usuario' en localStorage es el nombre o email
-  }
-})
 </script>
 
 <template>
@@ -65,8 +53,8 @@ onMounted(() => {
           <h1 class="font-bold text-2xl tracking-wide ml-2">Paws & Tails</h1>
         </router-link>
 
-        <div v-if="isAuthenticated" class="hidden md:block text-sm text-primary-light">
-          ¡Hola, <span class="font-semibold">{{ userName }}</span
+        <div v-if="userStore.isAuthenticated" class="hidden md:block text-sm text-primary-light">
+          ¡Hola, <span class="font-semibold">{{ userStore.userName }}</span
           >!
         </div>
       </div>
@@ -121,7 +109,7 @@ onMounted(() => {
             Gestión
           </router-link>
         </li>
-        <li v-if="isAuthenticated">
+        <li v-if="userStore.isAuthenticated">
           <BaseButton
             variant="ghost"
             size="sm"
@@ -166,11 +154,14 @@ onMounted(() => {
             Gestión
           </router-link>
         </li>
-        <li v-if="isAuthenticated" class="w-full text-center text-sm text-primary-light py-2">
-          ¡Hola, <span class="font-semibold">{{ userName }}</span
+        <li
+          v-if="userStore.isAuthenticated"
+          class="w-full text-center text-sm text-primary-light py-2"
+        >
+          ¡Hola, <span class="font-semibold">{{ userStore.userName }}</span
           >!
         </li>
-        <li v-if="isAuthenticated" class="w-full text-center mt-2 px-4">
+        <li v-if="userStore.isAuthenticated" class="w-full text-center mt-2 px-4">
           <BaseButton
             variant="ghost"
             size="md"
@@ -184,10 +175,3 @@ onMounted(() => {
     </transition>
   </header>
 </template>
-
-<style scoped>
-/*
-  No necesitamos estilos `scoped` directos si usamos Tailwind.
-  Las transiciones de Vue se manejan con clases CSS utility de Tailwind.
-*/
-</style>

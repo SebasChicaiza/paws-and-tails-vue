@@ -44,8 +44,19 @@ const router = createRouter({
       path: '/micuenta',
       name: 'Mi Cuenta',
       component: MiCuentaView,
+      meta: { requiresAuth: true }, // <--- Protección
     },
   ],
+})
+
+// Guard global para rutas protegidas
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('cuenta')
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next({ name: 'Login' })
+  } else {
+    next()
+  }
 })
 
 export default router

@@ -194,7 +194,7 @@ const handleRegister = async () => {
     class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-yellow-300 via-orange-300 to-purple-300 animate-gradient-move"
   >
     <div
-      class="max-w-xl w-full space-y-8 p-10 bg-white rounded-xl shadow-2xl z-10 border border-gray-200"
+      class="max-w-4xl w-full space-y-8 p-10 bg-white rounded-xl shadow-2xl z-10 border border-gray-200"
     >
       <div class="text-center">
         <h2 class="mt-6 text-4xl font-extrabold text-gray-900 drop-shadow-sm">
@@ -244,7 +244,7 @@ const handleRegister = async () => {
 
         <hr class="my-6 border-gray-200" />
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <BaseInput
             label="Nombre"
             type="text"
@@ -263,8 +263,6 @@ const handleRegister = async () => {
             :error="errors.apellidoCliente"
             required
           />
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <BaseInput
             label="Cédula o RUC"
             type="text"
@@ -284,7 +282,8 @@ const handleRegister = async () => {
             required
           />
         </div>
-        <div class="grid grid-cols-1">
+
+        <div class="grid grid-cols-2 gap-4">
           <BaseInput
             label="Fecha de Nacimiento"
             type="date"
@@ -293,16 +292,16 @@ const handleRegister = async () => {
             :error="errors.fechaNacimiento"
             required
           />
+          <BaseInput
+            label="Dirección"
+            type="text"
+            id="direccion"
+            placeholder="Tu dirección completa"
+            v-model="direccion"
+            :error="errors.direccion"
+            required
+          />
         </div>
-        <BaseInput
-          label="Dirección"
-          type="text"
-          id="direccion"
-          placeholder="Tu dirección completa"
-          v-model="direccion"
-          :error="errors.direccion"
-          required
-        />
 
         <div
           v-if="errors.api"
