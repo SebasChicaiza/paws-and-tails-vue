@@ -284,23 +284,36 @@ export interface CompraPayload {
   }
   Direccion: string
   MetodoPago: string
-  IdUsuario: string // Asumiendo que el IdUsuario es string (UUID o similar)
+  IdUsuario: number // Asumiendo que el IdUsuario es string (UUID o similar)
   cuenta: number
 }
+
 
 const finalizarCompra = async (payload: CompraPayload) => {
   if (cart.value.length === 0) {
     // Ya validado en CartView, pero es una buena capa de seguridad
     return { success: false, message: 'Tu carrito está vacío.' }
   }
-
+  const adaptedPayload = {
+  Carrito: {
+    "<productos>k__BackingField": payload.Carrito.productos.map(p => ({
+      "<idProducto>k__BackingField": p.idProducto,
+      "<cantidad>k__BackingField": p.cantidad,
+    })),
+  },
+  Direccion: payload.Direccion,
+  MetodoPago: payload.MetodoPago,
+  IdUsuario: payload.IdUsuario,
+  cuenta: payload.cuenta,
+}
+  console.log('Finalizando compra con payload:', payload)
   try {
     const response = await fetch('https://backendpawstails.runasp.net/api/gestion/compra', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(adaptedPayload),
     })
 
     if (response.ok) {

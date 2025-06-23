@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ProductCard from '../components/ProductCard.vue'
 import BaseButton from '../components/base/BaseButton.vue'
@@ -65,6 +65,23 @@ watch(selectedCategory, () => {
   // Vue se encargará de re-renderizar filteredProducts automáticamente
   console.log(`Filtro de categoría cambiado a: ${selectedCategory.value}`)
 })
+
+const ITEMS_PER_PAGE = 8
+const currentPage = ref(1)
+
+const totalPages = computed(() =>
+  Math.ceil(filteredProducts.value.length / ITEMS_PER_PAGE)
+)
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * ITEMS_PER_PAGE
+  return filteredProducts.value.slice(start, start + ITEMS_PER_PAGE)
+})
+
+// Reinicia la página cuando cambia el filtro de categoría o los productos
+watch([selectedCategory, filteredProducts], () => {
+  currentPage.value = 1
+})
 </script>
 
 <template>
@@ -124,10 +141,9 @@ watch(selectedCategory, () => {
 
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         <ProductCard
-          v-for="product in filteredProducts"
+          v-for="product in paginatedProducts"
           :key="product.idProducto"
           :product="{
-            // Mapea tu ApiProduct a la interfaz Product de ProductCard
             id: product.idProducto,
             name: product.prodNombre,
             image: product.prodImg[0] || '/images/default-placeholder.png',
@@ -139,6 +155,29 @@ watch(selectedCategory, () => {
           @add-to-cart="handleAddToCart"
           @view-details="handleViewDetails"
         />
+      </div>
+
+      <!-- Paginación -->
+      <div v-if="totalPages > 1" class="flex justify-center items-center mt-8 gap-2">
+        <BaseButton
+          :disabled="currentPage === 1"
+          @click="currentPage--"
+          variant="secondary"
+          size="sm"
+        >
+          Anterior
+        </BaseButton>
+        <span class="mx-2 font-semibold text-lg">
+          Página {{ currentPage }} de {{ totalPages }}
+        </span>
+        <BaseButton
+          :disabled="currentPage === totalPages"
+          @click="currentPage++"
+          variant="secondary"
+          size="sm"
+        >
+          Siguiente
+        </BaseButton>
       </div>
     </div>
   </main>

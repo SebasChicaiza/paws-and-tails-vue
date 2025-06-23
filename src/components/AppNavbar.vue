@@ -1,15 +1,29 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user' // Ajusta la ruta si es necesario
+import { useUserStore } from '@/stores/user'
 import BaseButton from '../components/base/BaseButton.vue'
 
 const isMenuOpen = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 
+const windowWidth = ref(window.innerWidth)
+const MOBILE_BREAKPOINT = 1050
+
+const isMobile = computed(() => windowWidth.value < MOBILE_BREAKPOINT)
+
+const handleResize = () => {
+  windowWidth.value = window.innerWidth
+}
+
 onMounted(() => {
   userStore.loadFromLocalStorage()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
 })
 
 const toggleMenu = () => {
@@ -24,10 +38,7 @@ const navLinks = [
   { name: 'Mi Cuenta', path: '/micuenta' },
 ]
 
-// Ejemplo: si el usuario es admin (ajusta según tu lógica real)
 const showAdminButton = computed(() => {
-  // Si guardas el rol en el store, usa userStore.userRole === 'admin'
-  // Aquí solo es un ejemplo usando el nombre
   return userStore.userName === 'admin'
 })
 
@@ -48,27 +59,27 @@ const handleLogout = () => {
           <img
             src="../assets/images/logoPawsTails-noFondo.png"
             alt="Logo Paws & Tails"
-            class="h-10 w-auto"
+            class="h-10 w-auto md:h-10 h-8"
           />
-          <h1 class="font-bold text-2xl tracking-wide ml-2">Paws & Tails</h1>
+          <h1 class="font-bold text-2xl tracking-wide ml-2 md:text-2xl text-lg">Paws & Tails</h1>
         </router-link>
 
-        <div v-if="userStore.isAuthenticated" class="hidden md:block text-sm text-primary-light">
-          ¡Hola, <span class="font-semibold">{{ userStore.userName }}</span
-          >!
+        <div v-if="userStore.isAuthenticated && !isMobile" class="hidden md:block text-sm text-primary-light">
+          ¡Hola, <span class="font-semibold">{{ userStore.userName }}</span>!
         </div>
       </div>
 
-      <div class="md:hidden">
+      <!-- Botón hamburguesa solo si es móvil -->
+      <div v-if="isMobile" class="">
         <button
           @click="toggleMenu"
-          class="text-white focus:outline-none focus:ring-2 focus:ring-accent rounded-md p-2 transition-colors duration-200"
+          class="text-white focus:outline-none focus:ring-2 focus:ring-accent rounded-md p-4 transition-colors duration-200"
           :aria-expanded="isMenuOpen ? 'true' : 'false'"
           aria-controls="nav-links-mobile"
         >
           <svg
             v-if="!isMenuOpen"
-            class="h-6 w-6"
+            class="h-8 w-8"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -80,7 +91,7 @@ const handleLogout = () => {
               d="M4 6h16M4 12h16M4 18h16"
             ></path>
           </svg>
-          <svg v-else class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg v-else class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -91,7 +102,8 @@ const handleLogout = () => {
         </button>
       </div>
 
-      <ul class="hidden md:flex items-center space-x-6">
+      <!-- Menú normal solo si NO es móvil -->
+      <ul v-if="!isMobile" class="flex items-center space-x-6">
         <li v-for="link in navLinks" :key="link.name">
           <router-link
             :to="link.path"
@@ -122,6 +134,7 @@ const handleLogout = () => {
       </ul>
     </nav>
 
+    <!-- Menú móvil -->
     <transition
       enter-active-class="transition ease-out duration-300"
       enter-from-class="transform opacity-0 scale-y-0"
@@ -131,15 +144,15 @@ const handleLogout = () => {
       leave-to-class="transform opacity-0 scale-y-0"
     >
       <ul
-        v-if="isMenuOpen"
+        v-if="isMenuOpen && isMobile"
         id="nav-links-mobile"
-        class="md:hidden flex flex-col items-center mt-4 space-y-2 bg-primary-dark rounded-b-lg py-2 origin-top"
+        class="fixed left-0 top-16 w-full flex flex-col items-center mt-0 space-y-2 bg-primary-dark shadow-2xl rounded-b-lg py-4 origin-top z-50"
       >
         <li v-for="link in navLinks" :key="link.name" class="w-full text-center">
           <router-link
             :to="link.path"
             active-class="bg-primary text-accent"
-            class="block py-2 px-4 text-white hover:bg-primary-light transition-colors duration-200 w-full focus:outline-none focus:ring-2 focus:ring-accent rounded-md"
+            class="block py-3 px-4 text-white hover:bg-primary-light transition-colors duration-200 w-full focus:outline-none focus:ring-2 focus:ring-accent rounded-md"
             @click="isMenuOpen = false"
           >
             {{ link.name }}
@@ -148,7 +161,7 @@ const handleLogout = () => {
         <li v-if="showAdminButton" class="w-full text-center">
           <router-link
             to="/admin"
-            class="block py-2 px-4 text-white hover:bg-primary-light transition-colors duration-200 w-full focus:outline-none focus:ring-2 focus:ring-accent rounded-md"
+            class="block py-3 px-4 text-white hover:bg-primary-light transition-colors duration-200 w-full focus:outline-none focus:ring-2 focus:ring-accent rounded-md"
             @click="isMenuOpen = false"
           >
             Gestión
@@ -158,8 +171,7 @@ const handleLogout = () => {
           v-if="userStore.isAuthenticated"
           class="w-full text-center text-sm text-primary-light py-2"
         >
-          ¡Hola, <span class="font-semibold">{{ userStore.userName }}</span
-          >!
+          ¡Hola, <span class="font-semibold">{{ userStore.userName }}</span>!
         </li>
         <li v-if="userStore.isAuthenticated" class="w-full text-center mt-2 px-4">
           <BaseButton
