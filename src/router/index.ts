@@ -6,6 +6,8 @@ import CarritoView from '@/views/CarritoView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegistroView from '@/views/RegistroView.vue'
 import MiCuentaView from '@/views/MiCuentaView.vue'
+import GestionView from '@/views/Admin/GestionView.vue'
+import GestionProductosView from '@/views/Admin/GestionProductosView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +46,18 @@ const router = createRouter({
       path: '/micuenta',
       name: 'Mi Cuenta',
       component: MiCuentaView,
+      meta: { requiresAuth: true }, // <--- Protección
+    },
+    {
+      path: '/gestion',
+      name: 'Gestion',
+      component: GestionView,
+      meta: { requiresAuth: true }, // <--- Protección
+    },
+    {
+      path: '/gestion/productos',
+      name: 'GestionProductos',
+      component: GestionProductosView,
       meta: { requiresAuth: true }, // <--- Protección
     },
   ],

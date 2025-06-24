@@ -16,6 +16,7 @@ const isMobile = computed(() => windowWidth.value < MOBILE_BREAKPOINT)
 const handleResize = () => {
   windowWidth.value = window.innerWidth
 }
+const usuarioNombre = computed(() => userStore.userName || localStorage.getItem('usuario'))
 
 onMounted(() => {
   userStore.loadFromLocalStorage()
@@ -39,7 +40,7 @@ const navLinks = [
 ]
 
 const showAdminButton = computed(() => {
-  return userStore.userName === 'admin'
+  return userStore.userRole === 'Administrador'
 })
 
 const handleLogout = () => {
@@ -65,7 +66,7 @@ const handleLogout = () => {
         </router-link>
 
         <div v-if="userStore.isAuthenticated && !isMobile" class="hidden md:block text-sm text-primary-light">
-          ¡Hola, <span class="font-semibold">{{ userStore.userName }}</span>!
+          ¡Hola, <span class="font-semibold">{{ usuarioNombre}}</span>!
         </div>
       </div>
 
@@ -115,7 +116,7 @@ const handleLogout = () => {
         </li>
         <li v-if="showAdminButton">
           <router-link
-            to="/admin"
+            to="/gestion"
             class="block py-2 px-1 text-white hover:text-accent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent rounded-md"
           >
             Gestión
@@ -160,7 +161,7 @@ const handleLogout = () => {
         </li>
         <li v-if="showAdminButton" class="w-full text-center">
           <router-link
-            to="/admin"
+            to="/gestion"
             class="block py-3 px-4 text-white hover:bg-primary-light transition-colors duration-200 w-full focus:outline-none focus:ring-2 focus:ring-accent rounded-md"
             @click="isMenuOpen = false"
           >

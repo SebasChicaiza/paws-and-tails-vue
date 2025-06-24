@@ -6,7 +6,6 @@ export interface User {
   IdUsuario: string
   UsuarioNombre: string
   UsuarioCorreo?: string
-  // ...
 }
 
 const isLoadingAuth = ref(false)
@@ -42,8 +41,9 @@ export function useAuth() {
       const userData: User = await response.json()
 
       if (userData && userData.IdUsuario) {
-        userStore.login(userData.UsuarioNombre)
         localStorage.setItem('cuenta', JSON.stringify(userData))
+        userStore.login(userData.UsuarioNombre)
+
         alert('Inicio de sesión exitoso. Bienvenido ' + userData.UsuarioNombre)
         router.push({ name: 'Productos' })
         return { success: true, message: 'Inicio de sesión exitoso.' }
