@@ -82,7 +82,9 @@ function cerrarModal() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-r from-pink-200 via-blue-200 to-blue-300 font-quicksand">
+  <div
+    class="min-h-screen bg-gradient-to-r from-pink-200 via-blue-200 to-blue-300 font-quicksand pb-2"
+  >
     <!-- Header (usa tu componente si tienes) -->
     <!-- <AppNavbar /> -->
 

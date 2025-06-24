@@ -8,6 +8,7 @@ import RegistroView from '@/views/RegistroView.vue'
 import MiCuentaView from '@/views/MiCuentaView.vue'
 import GestionView from '@/views/Admin/GestionView.vue'
 import GestionProductosView from '@/views/Admin/GestionProductosView.vue'
+import GestionFacturasView from '@/views/Admin/GestionFacturasView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +59,12 @@ const router = createRouter({
       path: '/gestion/productos',
       name: 'GestionProductos',
       component: GestionProductosView,
+      meta: { requiresAuth: true }, // <--- Protección
+    },
+    {
+      path: '/gestion/facturas',
+      name: 'GestionFacturas',
+      component: GestionFacturasView,
       meta: { requiresAuth: true }, // <--- Protección
     },
   ],
