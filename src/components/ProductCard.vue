@@ -66,7 +66,7 @@ const handleAddToCart = () => {
     <img
       :src="product.image"
       :alt="product.name"
-      class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
+      class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
     />
     <div class="absolute top-2 right-2 flex flex-col space-y-1">
       <span

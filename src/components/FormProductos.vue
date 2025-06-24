@@ -224,14 +224,14 @@ const handleSubmit = async () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap');
-.titulo{
+.titulo {
   background-color: #a18cd1;
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: 2rem;
   color: white;
   font-family: 'Quicksand', sans-serif;
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 .loader {
   border: 3px solid #f3f3f3;
@@ -252,6 +252,9 @@ const handleSubmit = async () => {
     transform: rotate(360deg);
   }
 }
+#nombre {
+  height: 3rem;
+}
 
 .row-flex {
   display: flex;
@@ -265,7 +268,7 @@ const handleSubmit = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent; /* o el fondo que desees */
+  background: transparent;
 }
 
 .container {
@@ -279,24 +282,24 @@ const handleSubmit = async () => {
 
 h1 {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: #5a2d82;
 }
 
 label {
   font-weight: bold;
   display: block;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 input,
 textarea {
   width: 100%;
-  padding: 10px;
-  margin-top: 0.3rem;
+  padding: 5px;
+  margin-top: 0.2rem;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .preview-img {

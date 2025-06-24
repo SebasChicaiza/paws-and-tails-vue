@@ -32,16 +32,23 @@ const fetchProductos = async () => {
 }
 
 const eliminarProducto = async (idProducto: number) => {
-  if (!confirm(`¿Seguro que deseas eliminar el producto #${idProducto}? Esta acción no se puede deshacer.`))
+  if (
+    !confirm(
+      `¿Seguro que deseas eliminar el producto #${idProducto}? Esta acción no se puede deshacer.`,
+    )
+  )
     return
   try {
-    const res = await fetch(`https://backendpawstails.runasp.net/api/gestion/productos/${idProducto}`, {
-      method: 'DELETE',
-    })
+    const res = await fetch(
+      `https://backendpawstails.runasp.net/api/gestion/productos/${idProducto}`,
+      {
+        method: 'DELETE',
+      },
+    )
     if (!res.ok) throw new Error()
     alert('✅ Producto eliminado correctamente')
     await fetchProductos()
-  } catch(e) {
+  } catch (e) {
     console.error('Error al eliminar el producto:', e)
     alert('❌ Error al eliminar el producto')
   }
@@ -146,7 +153,7 @@ function cerrarModal() {
     </div>
 
     <div v-if="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg max-w-6xl w-full relative">
+      <div class="bg-white rounded-xl shadow-lg max-w-2xl w-auto relative text-sm">
         <button class="absolute top-2 right-2 text-xl" @click="cerrarModal">✖️</button>
         <FormProductos :producto="productoAEditar" @close="cerrarModal" />
       </div>
