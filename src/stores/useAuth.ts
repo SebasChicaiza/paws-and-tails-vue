@@ -6,6 +6,7 @@ export interface User {
   IdUsuario: string
   UsuarioNombre: string
   UsuarioCorreo?: string
+  Cedula: string
 }
 
 const isLoadingAuth = ref(false)
@@ -45,6 +46,7 @@ export function useAuth() {
         userStore.login(userData.UsuarioNombre)
 
         alert('Inicio de sesión exitoso. Bienvenido ' + userData.UsuarioNombre)
+        localStorage.setItem('cedula', userData.Cedula)
         router.push({ name: 'Productos' })
         return { success: true, message: 'Inicio de sesión exitoso.' }
       } else {

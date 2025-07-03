@@ -23,11 +23,11 @@ const isLoadingPurchase = ref(false)
 // Permite que el usuario escriba libremente sin validación inmediata en el v-model
 const tempQuantities = ref<{ [key: number]: number | string }>({})
 
-// Inicializar tempQuantities al montar el componente o cuando cambia el carrito
 onMounted(() => {
   cart.value.forEach((item) => {
     tempQuantities.value[item.idProducto] = item.cantidad
   })
+  fetchCuentasCliente()
 })
 
 // Watch para mantener tempQuantities sincronizado si el carrito cambia de forma externa
@@ -103,7 +103,7 @@ const processPurchase = async () => {
     alert('Por favor, ingresa una dirección de envío.')
     return
   }
-  if (!numeroCuenta.value.trim()) {
+  if (!numeroCuenta.value) {
     alert('Por favor, ingresa el número de cuenta para la transferencia.')
     return
   }
@@ -148,6 +148,35 @@ const processPurchase = async () => {
     alert('Un error ocurrió al procesar tu compra. Por favor, intenta nuevamente más tarde.')
   } finally {
     isLoadingPurchase.value = false
+  }
+}
+type CuentaCliente = {
+  cuenta_id: number
+  tipo_cuenta: string
+  saldo: number
+}
+
+const cuentasCliente = ref<CuentaCliente[]>([])
+
+const fetchCuentasCliente = async () => {
+  try {
+    const cedula = localStorage.getItem('cedula')
+    if (!cedula) return
+
+    const response = await fetch(
+      `https://backendpawstails.runasp.net/api/gestion/usuario/cuentas-cliente/${cedula}`,
+    )
+    const data = await response.json()
+
+    if (Array.isArray(data)) {
+      cuentasCliente.value = data.map((cuenta) => ({
+        cuenta_id: cuenta.cuenta_id,
+        tipo_cuenta: cuenta.tipo_cuenta,
+        saldo: cuenta.saldo,
+      }))
+    }
+  } catch (error) {
+    console.error('Error al obtener las cuentas del cliente:', error)
   }
 }
 </script>
@@ -263,18 +292,28 @@ const processPurchase = async () => {
               />
             </div>
             <div>
-              <label for="numeroCuenta" class="block text-text-dark text-sm font-medium mb-1"
-                >Número de Cuenta</label
-              >
-              <input
-                type="text"
+              <label for="numeroCuenta" class="block text-text-dark text-sm font-medium mb-1">
+                Selecciona una Cuenta
+              </label>
+              <select
                 id="numeroCuenta"
                 v-model="numeroCuenta"
-                placeholder="Ej: 001234567890 (para transferencia)"
                 required
                 class="w-full p-3 border border-primary-light rounded-lg bg-surface-light focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200"
-              />
+              >
+                <option disabled value="">-- Selecciona una cuenta --</option>
+                <option
+                  v-for="cuenta in cuentasCliente"
+                  :key="cuenta.cuenta_id"
+                  :value="cuenta.cuenta_id"
+                >
+                  Cuenta #{{ cuenta.cuenta_id }} - {{ cuenta.tipo_cuenta }} - Saldo: ${{
+                    cuenta.saldo.toFixed(2)
+                  }}
+                </option>
+              </select>
             </div>
+
             <input type="hidden" v-model="metodoPago" />
 
             <BaseButton
